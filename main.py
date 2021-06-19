@@ -13,36 +13,42 @@ import pygame
 #         self.x = x
 #         self.y = y
 
+PLAYER_WIDTH = 32
+PLAYER_HEIGHT = 32
+SCREEN_WIDTH = 1025
+SCREEN_HEIGHT = 768
+
 
 class Player:
+    VELOCITY = 10
+
     def __init__(self, x, y, image):
         self.x = x
         self.y = y
         self.image = image
 
-    def move_right(self):
-        if self.x <= 990:
-            self.x += 4
-
-    def move_left(self):
-        if self.x >= 0.5:
-            self.x -= 4
-
-    def move_down(self):
-        if self.y <= 735:
-            self.y += 4
-
-    def move_up(self):
-        if self.y >= 0.5:
-            self.y -= 4
+    def move(self, direction: str):
+        if direction == "right":
+            if self.x <= 990:
+                self.x += self.VELOCITY
+        elif direction == "left":
+            if self.x >= 0.5:
+                self.x -= self.VELOCITY
+        elif direction == "down":
+            if self.y <= 735:
+                self.y += self.VELOCITY
+        elif direction == "up":
+            if self.y >= 0.5:
+                self.y -= self.VELOCITY
 
     def display(self, screen):
-        screen.blit(self.image, (self.x, self.y))
+        screen.blit(self.image, (self.x - PLAYER_WIDTH / 2, self.y - PLAYER_HEIGHT / 2))
+
 
 def main():
     pygame.init()
     background_color = (66, 227, 245)
-    screen = pygame.display.set_mode((1025, 768))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("BomberGirl")
     clock = pygame.time.Clock()
 
@@ -62,13 +68,13 @@ def main():
             elif event.type == pygame.KEYUP:
                 movement[event.key] = False
         if movement[pygame.K_RIGHT]:
-            player.move_right()
+            player.move("right")
         elif movement[pygame.K_DOWN]:
-            player.move_down()
+            player.move("down")
         elif movement[pygame.K_LEFT]:
-            player.move_left()
+            player.move("left")
         elif movement[pygame.K_UP]:
-            player.move_up()
+            player.move("up")
         player.display(screen)
         # screen.blit(grass_image, (50, 50))
         pygame.display.flip()
