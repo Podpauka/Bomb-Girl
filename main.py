@@ -15,9 +15,10 @@ import pygame
 
 
 class Player:
-    def __init__(self, x, y):
+    def __init__(self, x, y, image):
         self.x = x
         self.y = y
+        self.image = image
 
     def move_right(self):
         if self.x <= 990:
@@ -35,6 +36,8 @@ class Player:
         if self.y >= 0.5:
             self.y -= 4
 
+    def display(self, screen):
+        screen.blit(self.image, (self.x, self.y))
 
 def main():
     pygame.init()
@@ -44,11 +47,11 @@ def main():
     clock = pygame.time.Clock()
 
     player_image = pygame.transform.scale2x(pygame.image.load("images\pf0.png"))
-    grass_image = pygame.transform.scale2x(pygame.image.load("images\grass.png"))
+    # grass_image = pygame.transform.scale2x(pygame.image.load("images\grass.png"))
 
     movement = {pygame.K_UP: False, pygame.K_DOWN: False, pygame.K_LEFT: False, pygame.K_RIGHT: False}
     running = True
-    player = Player(0, 0)
+    player = Player(0, 0, player_image)
     while running:
         screen.fill(background_color)
         for event in pygame.event.get():
@@ -66,8 +69,8 @@ def main():
             player.move_left()
         elif movement[pygame.K_UP]:
             player.move_up()
-        screen.blit(player_image, (player.x, player.y))
-        screen.blit(grass_image, (50, 50))
+        player.display(screen)
+        # screen.blit(grass_image, (50, 50))
         pygame.display.flip()
         clock.tick(60)
     pygame.quit()
