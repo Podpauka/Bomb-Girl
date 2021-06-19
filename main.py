@@ -1,12 +1,39 @@
 import sys
 import pygame
 
-
 # 1. rysowanie, okno, mapa, grafika
 # 2. poruszanie się
 # 3. kolizje
 # 4. gracz
 # 5. przeciwnik
+
+
+# class Position:
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+
+
+class Player:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def move_right(self):
+        if self.x <= 990:
+            self.x += 4
+
+    def move_left(self):
+        if self.x >= 0.5:
+            self.x -= 4
+
+    def move_down(self):
+        if self.y <= 735:
+            self.y += 4
+
+    def move_up(self):
+        if self.y >= 0.5:
+            self.y -= 4
 
 
 def main():
@@ -16,12 +43,12 @@ def main():
     pygame.display.set_caption("BomberGirl")
     clock = pygame.time.Clock()
 
-    player = pygame.image.load("images\pf0.png")
-    player_x = 0
-    player_y = 0
+    player_image = pygame.transform.scale2x(pygame.image.load("images\pf0.png"))
+    grass_image = pygame.transform.scale2x(pygame.image.load("images\grass.png"))
 
     movement = {pygame.K_UP: False, pygame.K_DOWN: False, pygame.K_LEFT: False, pygame.K_RIGHT: False}
     running = True
+    player = Player(0, 0)
     while running:
         screen.fill(background_color)
         for event in pygame.event.get():
@@ -32,18 +59,15 @@ def main():
             elif event.type == pygame.KEYUP:
                 movement[event.key] = False
         if movement[pygame.K_RIGHT]:
-            if player_x <= 1000:
-                player_x += 4
+            player.move_right()
         elif movement[pygame.K_DOWN]:
-            if player_y <= 760:
-                player_y += 4
+            player.move_down()
         elif movement[pygame.K_LEFT]:
-            if player_x >= 0.5:
-                player_x -= 4
+            player.move_left()
         elif movement[pygame.K_UP]:
-            if player_y >= 0.5:
-                player_y -= 4
-        screen.blit(player, (player_x, player_y))
+            player.move_up()
+        screen.blit(player_image, (player.x, player.y))
+        screen.blit(grass_image, (50, 50))
         pygame.display.flip()
         clock.tick(60)
     pygame.quit()
