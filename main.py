@@ -22,30 +22,47 @@ class Direction(Enum):
     right = "right"
 
 
+class Vector:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        x = self.x + other.x
+        y = self.y + other.y
+        new_vector = Vector(x, y)
+        return new_vector
+
+    def __mul__(self, other):
+        x = self.x * other
+        y = self.y * other
+        new_vector = Vector(x, y)
+        return new_vector
+
+
 class Player:
     VELOCITY = 5
 
-    def __init__(self, x, y, image):
-        self.x = x
-        self.y = y
+    def __init__(self, position, image):
+        self.position = position
         self.image = image
 
     def move(self, direction: Direction):
         if direction == Direction.right:
-            if self.x + PLAYER_WIDTH / 2 + self.VELOCITY <= SCREEN_WIDTH:
-                self.x += self.VELOCITY
+            if self.position.x + PLAYER_WIDTH / 2 + self.VELOCITY <= SCREEN_WIDTH:
+                self.position.x += self.VELOCITY
         elif direction == Direction.left:
-            if self.x - PLAYER_WIDTH / 2 - self.VELOCITY >= 0:
-                self.x -= self.VELOCITY
+            if self.position.x - PLAYER_WIDTH / 2 - self.VELOCITY >= 0:
+                self.position.x -= self.VELOCITY
         elif direction == Direction.down:
-            if self.y + PLAYER_HEIGHT / 2 + self.VELOCITY <= SCREEN_HEIGHT:
-                self.y += self.VELOCITY
+            if self.position.y + PLAYER_HEIGHT / 2 + self.VELOCITY <= SCREEN_HEIGHT:
+                self.position.y += self.VELOCITY
         elif direction == Direction.up:
-            if self.y - PLAYER_HEIGHT / 2 - self.VELOCITY >= 0:
-                self.y -= self.VELOCITY
+            if self.position.y - PLAYER_HEIGHT / 2 - self.VELOCITY >= 0:
+                self.position.y -= self.VELOCITY
 
     def display(self, screen):
-        screen.blit(self.image, (self.x - PLAYER_WIDTH / 2, self.y - PLAYER_HEIGHT / 2))
+        screen.blit(self.image, (self.position.x - PLAYER_WIDTH / 2, self.position.y - PLAYER_HEIGHT / 2))
 
 
 def main():
@@ -60,7 +77,7 @@ def main():
 
     movement = {pygame.K_UP: False, pygame.K_DOWN: False, pygame.K_LEFT: False, pygame.K_RIGHT: False}
     running = True
-    player = Player(16, 16, player_image)
+    player = Player(Vector(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2), player_image)
     while running:
         screen.fill(background_color)
         for event in pygame.event.get():
