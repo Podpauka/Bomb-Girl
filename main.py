@@ -8,11 +8,6 @@ import pygame
 # 5. przeciwnik
 
 
-# class Position:
-#     def __init__(self, x, y):
-#         self.x = x
-#         self.y = y
-
 PLAYER_WIDTH = 32
 PLAYER_HEIGHT = 32
 SCREEN_WIDTH = 1025
@@ -20,7 +15,7 @@ SCREEN_HEIGHT = 768
 
 
 class Player:
-    VELOCITY = 10
+    VELOCITY = 5
 
     def __init__(self, x, y, image):
         self.x = x
@@ -29,16 +24,16 @@ class Player:
 
     def move(self, direction: str):
         if direction == "right":
-            if self.x <= 990:
+            if self.x + PLAYER_WIDTH / 2 + self.VELOCITY <= SCREEN_WIDTH:
                 self.x += self.VELOCITY
         elif direction == "left":
-            if self.x >= 0.5:
+            if self.x - PLAYER_WIDTH / 2 - self.VELOCITY >= 0:
                 self.x -= self.VELOCITY
         elif direction == "down":
-            if self.y <= 735:
+            if self.y + PLAYER_HEIGHT / 2 + self.VELOCITY <= SCREEN_HEIGHT:
                 self.y += self.VELOCITY
         elif direction == "up":
-            if self.y >= 0.5:
+            if self.y - PLAYER_HEIGHT / 2 - self.VELOCITY >= 0:
                 self.y -= self.VELOCITY
 
     def display(self, screen):
@@ -57,7 +52,7 @@ def main():
 
     movement = {pygame.K_UP: False, pygame.K_DOWN: False, pygame.K_LEFT: False, pygame.K_RIGHT: False}
     running = True
-    player = Player(0, 0, player_image)
+    player = Player(16, 16, player_image)
     while running:
         screen.fill(background_color)
         for event in pygame.event.get():
