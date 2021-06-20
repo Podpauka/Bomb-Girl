@@ -39,27 +39,41 @@ class Vector:
         new_vector = Vector(x, y)
         return new_vector
 
+    def clip_to_rect(self, left_top_corner: "Vector", right_bottom_corner: "Vector") -> "Vector":
+        new_vector_x = self.x
+        new_vector_y = self.y
+        if new_vector_x < left_top_corner.x:
+            new_vector_x = left_top_corner.x
+        elif new_vector_x > right_bottom_corner.x:
+            new_vector_x = right_bottom_corner.x
+        if new_vector_y < left_top_corner.y:
+            new_vector_y = left_top_corner.y
+        elif new_vector_y > right_bottom_corner.y:
+            new_vector_y = right_bottom_corner.y
+        return Vector(new_vector_x, new_vector_y)
+
 
 class Player:
     VELOCITY = 5
 
-    def __init__(self, position, image):
+    def __init__(self, position: Vector, image):
         self.position = position
         self.image = image
 
     def move(self, direction: Direction):
         if direction == Direction.right:
-            if self.position.x + PLAYER_WIDTH / 2 + self.VELOCITY <= SCREEN_WIDTH:
-                self.position.x += self.VELOCITY
+            self.position.x += self.VELOCITY
         elif direction == Direction.left:
-            if self.position.x - PLAYER_WIDTH / 2 - self.VELOCITY >= 0:
-                self.position.x -= self.VELOCITY
+            self.position.x -= self.VELOCITY
         elif direction == Direction.down:
-            if self.position.y + PLAYER_HEIGHT / 2 + self.VELOCITY <= SCREEN_HEIGHT:
-                self.position.y += self.VELOCITY
+            self.position.y += self.VELOCITY
         elif direction == Direction.up:
-            if self.position.y - PLAYER_HEIGHT / 2 - self.VELOCITY >= 0:
-                self.position.y -= self.VELOCITY
+            self.position.y -= self.VELOCITY
+
+        self.position = self.position.clip_to_rect(
+            left_top_corner=Vector(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2),
+            right_bottom_corner=Vector(SCREEN_WIDTH - PLAYER_WIDTH / 2, SCREEN_HEIGHT - PLAYER_HEIGHT / 2)
+        )
 
     def display(self, screen):
         screen.blit(self.image, (self.position.x - PLAYER_WIDTH / 2, self.position.y - PLAYER_HEIGHT / 2))
