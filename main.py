@@ -1,5 +1,6 @@
 import sys
 import pygame
+from enum import Enum
 
 # 1. rysowanie, okno, mapa, grafika
 # 2. poruszanie się
@@ -14,6 +15,13 @@ SCREEN_WIDTH = 1025
 SCREEN_HEIGHT = 768
 
 
+class Direction(Enum):
+    up = "up"
+    down = "down"
+    left = "left"
+    right = "right"
+
+
 class Player:
     VELOCITY = 5
 
@@ -22,17 +30,17 @@ class Player:
         self.y = y
         self.image = image
 
-    def move(self, direction: str):
-        if direction == "right":
+    def move(self, direction: Direction):
+        if direction == Direction.right:
             if self.x + PLAYER_WIDTH / 2 + self.VELOCITY <= SCREEN_WIDTH:
                 self.x += self.VELOCITY
-        elif direction == "left":
+        elif direction == Direction.left:
             if self.x - PLAYER_WIDTH / 2 - self.VELOCITY >= 0:
                 self.x -= self.VELOCITY
-        elif direction == "down":
+        elif direction == Direction.down:
             if self.y + PLAYER_HEIGHT / 2 + self.VELOCITY <= SCREEN_HEIGHT:
                 self.y += self.VELOCITY
-        elif direction == "up":
+        elif direction == Direction.up:
             if self.y - PLAYER_HEIGHT / 2 - self.VELOCITY >= 0:
                 self.y -= self.VELOCITY
 
@@ -63,13 +71,13 @@ def main():
             elif event.type == pygame.KEYUP:
                 movement[event.key] = False
         if movement[pygame.K_RIGHT]:
-            player.move("right")
+            player.move(Direction.right)
         elif movement[pygame.K_DOWN]:
-            player.move("down")
+            player.move(Direction.down)
         elif movement[pygame.K_LEFT]:
-            player.move("left")
+            player.move(Direction.left)
         elif movement[pygame.K_UP]:
-            player.move("up")
+            player.move(Direction.up)
         player.display(screen)
         # screen.blit(grass_image, (50, 50))
         pygame.display.flip()
