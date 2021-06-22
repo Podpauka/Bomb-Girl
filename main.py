@@ -15,13 +15,6 @@ SCREEN_WIDTH = 1025
 SCREEN_HEIGHT = 768
 
 
-class Direction(Enum):
-    up = "up"
-    down = "down"
-    left = "left"
-    right = "right"
-
-
 class Vector:
     def __init__(self, x: float, y: float):
         self.x = x
@@ -53,6 +46,13 @@ class Vector:
         return Vector(new_vector_x, new_vector_y)
 
 
+class Direction(Enum):
+    up = Vector(0, -1)
+    down = Vector(0, 1)
+    left = Vector(-1, 0)
+    right = Vector(1, 0)
+
+
 class Player:
     VELOCITY = 5
 
@@ -61,15 +61,7 @@ class Player:
         self.image = image
 
     def move(self, direction: Direction):
-        if direction == Direction.right:
-            self.position.x += self.VELOCITY
-        elif direction == Direction.left:
-            self.position.x -= self.VELOCITY
-        elif direction == Direction.down:
-            self.position.y += self.VELOCITY
-        elif direction == Direction.up:
-            self.position.y -= self.VELOCITY
-
+        self.position = self.position + (direction.value * self.VELOCITY)
         self.position = self.position.clip_to_rect(
             left_top_corner=Vector(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2),
             right_bottom_corner=Vector(SCREEN_WIDTH - PLAYER_WIDTH / 2, SCREEN_HEIGHT - PLAYER_HEIGHT / 2)
