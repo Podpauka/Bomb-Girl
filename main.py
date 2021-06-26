@@ -13,6 +13,8 @@ PLAYER_WIDTH = 32
 PLAYER_HEIGHT = 32
 SCREEN_WIDTH = 1025
 SCREEN_HEIGHT = 768
+WALL_WIDTH = 32
+WALL_HEIGHT = 32
 
 
 class Vector:
@@ -46,6 +48,15 @@ class Vector:
         return Vector(new_vector_x, new_vector_y)
 
 
+class Wall:
+    def __init__(self, position: Vector, image: pygame.Surface):
+        self.position = position
+        self.image = image
+
+    def display(self, screen: pygame.Surface):
+        screen.blit(self.image, (self.position.x - WALL_WIDTH / 2, self.position.y - WALL_HEIGHT / 2))
+
+
 class Direction(Enum):
     up = Vector(0, -1)
     down = Vector(0, 1)
@@ -56,7 +67,7 @@ class Direction(Enum):
 class Player:
     VELOCITY = 5
 
-    def __init__(self, position: Vector, image):
+    def __init__(self, position: Vector, image: pygame.Surface):
         self.position = position
         self.image = image
 
@@ -67,7 +78,7 @@ class Player:
             right_bottom_corner=Vector(SCREEN_WIDTH - PLAYER_WIDTH / 2, SCREEN_HEIGHT - PLAYER_HEIGHT / 2)
         )
 
-    def display(self, screen):
+    def display(self, screen: pygame.Surface):
         screen.blit(self.image, (self.position.x - PLAYER_WIDTH / 2, self.position.y - PLAYER_HEIGHT / 2))
 
 
@@ -79,11 +90,13 @@ def main():
     clock = pygame.time.Clock()
 
     player_image = pygame.transform.scale2x(pygame.image.load("images\pf0.png"))
+    wall_image = pygame.transform.scale2x(pygame.image.load("images\\block.png"))
     # grass_image = pygame.transform.scale2x(pygame.image.load("images\grass.png"))
 
     movement = {pygame.K_UP: False, pygame.K_DOWN: False, pygame.K_LEFT: False, pygame.K_RIGHT: False}
     running = True
     player = Player(Vector(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2), player_image)
+    wall = Wall(Vector(WALL_WIDTH / 2, WALL_HEIGHT / 2), wall_image)
     while running:
         screen.fill(background_color)
         for event in pygame.event.get():
@@ -102,7 +115,7 @@ def main():
         elif movement[pygame.K_UP]:
             player.move(Direction.up)
         player.display(screen)
-        # screen.blit(grass_image, (50, 50))
+        wall.display(screen)
         pygame.display.flip()
         clock.tick(60)
     pygame.quit()
