@@ -1,3 +1,4 @@
+import json
 import sys
 import pygame
 from enum import Enum
@@ -84,7 +85,7 @@ class Player:
 
 def main():
     pygame.init()
-    background_color = (66, 227, 245)
+    background_color = (0, 0, 0)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("BomberGirl")
     clock = pygame.time.Clock()
@@ -96,7 +97,10 @@ def main():
     movement = {pygame.K_UP: False, pygame.K_DOWN: False, pygame.K_LEFT: False, pygame.K_RIGHT: False}
     running = True
     player = Player(Vector(PLAYER_WIDTH / 2, PLAYER_HEIGHT / 2), player_image)
-    wall = Wall(Vector(WALL_WIDTH / 2, WALL_HEIGHT / 2), wall_image)
+    with open("map1.json") as file_map:
+        bomber_map = json.load(file_map)
+    walls = [Wall(Vector(x, y), wall_image) for x, y in bomber_map["walls"]]
+
     while running:
         screen.fill(background_color)
         for event in pygame.event.get():
@@ -115,7 +119,8 @@ def main():
         elif movement[pygame.K_UP]:
             player.move(Direction.up)
         player.display(screen)
-        wall.display(screen)
+        for wall in walls:
+            wall.display(screen)
         pygame.display.flip()
         clock.tick(60)
     pygame.quit()
